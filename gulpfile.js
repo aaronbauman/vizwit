@@ -14,11 +14,11 @@ var dir = {
 }
 
 gulp.task('build', ['clean'], function () {
-  gulp.start('scripts', 'styles', 'data', 'html', 'cname')
+  gulp.start('scripts', 'styles', 'data', 'html')
 })
 
 gulp.task('watch', ['clean'], function () {
-  gulp.start('scripts-watch', 'styles', 'data', 'html', 'cname')
+  gulp.start('scripts-watch', 'styles', 'data', 'html')
   gulp.watch(dir.dev + 'styles/*css', ['styles'])
   gulp.watch(dir.dev + '*.html', ['html'])
 })
@@ -37,11 +37,6 @@ gulp.task('scripts-watch', function () {
     scripts(dir.dev + 'scripts/vizwit-embed.js', 'vizwit-embed.js', true),
     scripts(dir.dev + 'scripts/vizwit-editor.js', 'vizwit-editor.js', true)
   )
-})
-
-gulp.task('cname', function () {
-  return gulp.src('CNAME')
-    .pipe(gulp.dest(dir.prod))
 })
 
 gulp.task('html', function () {
