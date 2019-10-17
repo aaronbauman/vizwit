@@ -15,7 +15,7 @@ module.exports = Backbone.Model.extend({
       model.trigger('sync', model, resp, options);
     };
     wrapError(this, options);
-    console.log('carto model options:', options)
+    // console.log('carto model options:', options)
     return this.sync('create', this, options);
   },
 })

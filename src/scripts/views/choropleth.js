@@ -75,7 +75,7 @@ module.exports = Card.extend({
       if (this.layer) {
         this.map.removeLayer(this.layer)
       }
-console.log(this.boundaries)
+      // console.log(this.boundaries)
       // Add choropleth layer
       var self = this
       var filtered = this.filteredCollection.getFilters().length

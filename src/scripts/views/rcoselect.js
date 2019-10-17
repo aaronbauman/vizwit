@@ -48,7 +48,7 @@ module.exports = Card.extend({
           order: [],
           scrollX: true,
           ajax: {
-            url: '../../data/rco-boundaries.json',
+            url: 'data/rco-boundaries.json',
             dataSrc: 'features'
           }
         })

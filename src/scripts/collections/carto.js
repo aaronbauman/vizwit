@@ -117,7 +117,7 @@ module.exports = BaseProvider.extend({
 
       // Get the URL
       var data = {q: this.getPostData()}
-console.log('data', data)
+      // console.log('data', data)
       // Set the values back
       this.config.aggregateFunction = oldAggregateFunction
       this.config.groupBy = oldGroupBy
