@@ -60,7 +60,7 @@ gulp.task('data', function () {
 })
 
 gulp.task('clean', function (cb) {
-  return del([dir.prod + '/**/*', '!' + dir.prod + '/.git'], cb)
+  return del([dir.prod + '/**/*', '!' + dir.prod + '/.git', , '!' + dir.prod + '/_config.yml'], cb)
 })
 
 /**

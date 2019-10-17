@@ -90,7 +90,8 @@ body {
 .amcharts-graph-line,
 .amcharts-graph-column,
 .amcharts-guide-fill,
-.amcharts-pie-item {
+.amcharts-pie-item,
+.rcoselect tr {
 	cursor: pointer
 }
 
