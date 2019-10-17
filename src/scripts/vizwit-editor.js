@@ -4,7 +4,7 @@ var ace = require('brace')
 ;require('brace/mode/json')
 var layout = require('./layout')
 
-var sampleData = require('../data/sample.json')
+var sampleData = require('../data/rcos.json')
 
 var layoutOptions = {
   headerSelector: '#page-header',

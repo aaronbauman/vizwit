@@ -12,14 +12,8 @@
 		
 		<div class="btn-group pull-right navigation" role="group" aria-label="Pages">
 			
-			<a href="http://vizwit.io" class="btn btn-default"><span class="fa fa-home"></span></a>
-			<a href="http://form.jotform.us/form/52708408087157?thePage=<%= encodeURIComponent(window.location.search.substr(1)) %>" class="btn btn-default">Feedback</a>
-			
-			<% if(data.navigation && data.navigation.length) { %>
-				<% data.navigation.forEach(function(nav) { %>
-				<a href="<%= nav.url %>" class="btn btn-default"><%= nav.label %></a>
-				<% }) %>
-			<% } %>
+			<a href="https://www.opendataphilly.org/dataset/opa-property-assessments" class="btn btn-default"><span class="fa fa-home"></span></a>
+			<a href="mailto:aaronbauman@gmail.com" class="btn btn-default">Feedback</a>
 		</div>
 			
 	</div>

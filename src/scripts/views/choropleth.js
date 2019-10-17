@@ -46,6 +46,13 @@ module.exports = Card.extend({
     // Add the filter to the filtered collection and fetch it with the filter
     this.filteredCollection.setFilter(data)
     this.filteredCollection.fetch()
+    if (data.expression) {
+      this.boundaries.url = "https://aaron-bauman.carto.com:443/api/v2/sql?q=select * from public.rcos WHERE " + data.field + " = '" + data.expression.value + "'&format=geojson"
+    }
+    else {
+      this.boundaries.url = "https://aaron-bauman.carto.com:443/api/v2/sql?q=select * from public.rcos&format=geojson"
+    }
+    this.boundaries.fetch()
     this.renderFilters()
   },
   render: function () {
@@ -68,13 +75,13 @@ module.exports = Card.extend({
       if (this.layer) {
         this.map.removeLayer(this.layer)
       }
-
+console.log(this.boundaries)
       // Add choropleth layer
       var self = this
       var filtered = this.filteredCollection.getFilters().length
       this.layer = L.choropleth(this.boundaries.toGeoJSON(), {
         valueProperty: filtered ? 'filteredValue' : 'value',
-        scale: ['#d9e6ed', '#477a94'],
+        scale: filtered ? ['#477a94', '#477a94'] : ['#d9e6ed', '#477a94'],
         steps: 5,
         mode: 'q',
         style: {
@@ -82,13 +89,13 @@ module.exports = Card.extend({
           weight: 2,
           fillOpacity: 0.7
         },
-        onEachFeature: function (feature, layer) {
-          layer.on({
-            mousemove: self.onMousemove,
-            mouseout: self.onMouseout,
-            click: self.onClick
-          })
-        }
+        // onEachFeature: function (feature, layer) {
+        //   layer.on({
+        //     mousemove: self.onMousemove,
+        //     mouseout: self.onMouseout,
+        //     click: self.onClick,
+        //   })
+        // }
       }).addTo(this.map)
 
       // Zoom to boundaries of new layer
@@ -103,6 +110,7 @@ module.exports = Card.extend({
     // Create hash table for easy reference
     var collectionValues = hashTable(this.collection.toJSON(), 'label', 'value')
     var filteredCollectionValues = hashTable(this.filteredCollection.toJSON(), 'label', 'value')
+
 
     // Add value from hash tables to geojson properties
     var idAttribute = this.boundaries.idAttribute
@@ -121,11 +129,11 @@ module.exports = Card.extend({
 
     // Construct popup HTML (TODO: Move to template)
     var popupContent = '<div class="marker-title">' +
-			'<h2>' + layer.feature.properties[this.boundaries.label] + '</h2>' +
-			'Total: ' + layer.feature.properties.value.toLocaleString()
-    if (layer.feature.properties.filteredValue !== undefined) {
-      popupContent += '<br>Filtered Amount: ' + layer.feature.properties.filteredValue.toLocaleString()
-    }
+			'<h2>' + layer.feature.properties[this.boundaries.label] + '</h2>'
+			// 'Total: ' + layer.feature.properties.value.toLocaleString()
+      // if (layer.feature.properties.filteredValue !== undefined) {
+      //   popupContent += '<br>Filtered Amount: ' + layer.feature.properties.filteredValue.toLocaleString()
+      // }
     popupContent += '</div>'
 
     this.popup.setLatLng(e.latlng)
@@ -140,9 +148,6 @@ module.exports = Card.extend({
       opacity: 0.8
     })
 
-    if (!L.Browser.ie && !L.Browser.opera) {
-      layer.bringToFront()
-    }
   },
   onMouseout: function (e) {
     var self = this

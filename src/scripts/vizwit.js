@@ -11,6 +11,7 @@ var DateTime = require('./views/datetime')
 var Choropleth = require('./views/choropleth')
 var Pie = require('./views/pie')
 var Callout = require('./views/callout')
+var Rcoselect = require('./views/rcoselect')
 
 exports.init = function (container, config, opts) {
   // If globals weren't passed, create them within this scope
@@ -34,6 +35,11 @@ exports.init = function (container, config, opts) {
   })
 
   // Initialize view
+  // console.log('config ' + config)
+  // console.log('opts' + opts)
+  // console.log('collection ' + collection)
+  // console.log('chart type ' + config.chartType)
+
   switch (config.chartType) {
     case 'bar':
       new Bar({
@@ -72,6 +78,16 @@ exports.init = function (container, config, opts) {
         vent: opts.vent
       })
       break
+
+    case 'rcoselect':
+      new Rcoselect({
+        config: config,
+        el: container,
+        collection: collection,
+        vent: opts.vent
+      })
+      break
+
     case 'choropleth':
       new Choropleth({
         config: config,
@@ -91,5 +107,6 @@ exports.init = function (container, config, opts) {
         vent: opts.vent
       })
       break
+
   }
 }

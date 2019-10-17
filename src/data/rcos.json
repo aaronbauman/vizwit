@@ -1,0 +1,175 @@
+{
+  "version": "2",
+  "header": {
+    "title": "RCO Portal",
+    "description": "Philadelphia property data, filterable by registered community organization boundaries"
+  },
+  "cards": [
+    {
+      "x": 0,
+      "y": 0,
+      "width": 6,
+      "height": 8,
+      "vizwit": {
+        "title": "RCO Boundaries",
+        "provider": "carto",
+        "domain": "aaron-bauman.carto.com",
+        "dataset": "rcos",
+        "chartType": "choropleth",
+        "groupBy": "organization_name",
+        "boundaries": "https://aaron-bauman.carto.com:443/api/v2/sql?q=select * from public.rcos&format=geojson",
+        "boundariesLabel": "organization_name",
+        "boundariesId": "organization_name"
+      }
+    },
+    {
+      "x": 0,
+      "y": 0,
+      "width": 6,
+      "height": 4,
+      "vizwit": {
+        "title": "Number of Properties by Category Code Description",
+        "provider": "carto",
+        "domain": "phl.carto.com",
+        "dataset": "opa_properties_public",
+        "chartType": "pie",
+        "groupBy": "category_code_description"
+      }
+    },
+    {
+      "x": 0,
+      "y": 0,
+      "width": 6,
+      "height": 4,
+      "vizwit": {
+        "title": "Number of Properties by Homestead Exemption",
+        "description": "",
+        "provider": "carto",
+        "domain": "phl.carto.com",
+        "dataset": "opa_properties_public",
+        "chartType": "pie",
+        "groupBy": "CASE homestead_exemption in (0, null) WHEN true THEN 'No Exemption' ELSE 'Full or Partially Exempt' END"
+      }
+    },
+    {
+      "x": 0,
+      "y": 10,
+      "width": 12,
+      "height": 7,
+      "vizwit": {
+        "title": "Filter properties by RCO",
+        "chartType": "rcoselect",
+        "provider": "local",
+        "filename": "none"
+      }
+    },
+    {
+      "x": 0,
+      "y": 20,
+      "width": 12,
+      "height": 5,
+      "vizwit": {
+        "title": "Properties",
+        "chartType": "table",
+        "provider": "carto",
+        "domain": "phl.carto.com",
+        "dataset": "opa_properties_public",
+        "columnsToHide": [
+          "cartodb_id",
+          "objectid",
+          "the_geom",
+          "the_geom_webmercator",
+          "assessment_date",
+          "basements",
+          "beginning_point",
+          "book_and_page",
+          "building_code",
+          "category_code",
+          "central_air",
+          "cross_reference",
+          "date_exterior_condition",
+          "depth",
+          "exterior_condition",
+          "fireplaces",
+          "frontage",
+          "fuel",
+          "garage_spaces",
+          "garage_type",
+          "general_construction",
+          "house_extension",
+          "house_number",
+          "interior_condition",
+          "mailing_address_2",
+          "mailing_care_of",
+          "market_value_date",
+          "off_street_open",
+          "other_building",
+          "parcel_shape",
+          "quality_grade",
+          "recording_date",
+          "registry_number",
+          "separate_utilities",
+          "sewer",
+          "site_type",
+          "state_code",
+          "street_code",
+          "street_designation",
+          "street_direction",
+          "street_name",
+          "suffix",
+          "topography",
+          "type_heater",
+          "unfinished",
+          "utility",
+          "view_type"
+        ]
+      }
+    },
+    {
+      "x": 0,
+      "y": 30,
+      "width": 8,
+      "height": 4,
+      "vizwit": {
+        "title": "Number of Properties by Zoning",
+        "description": "Determines the acceptable uses of the property (commercial, residential, etc.)",
+        "provider": "carto",
+        "domain": "phl.carto.com",
+        "dataset": "opa_properties_public",
+        "chartType": "bar",
+        "groupBy": "zoning"
+      }
+    },
+    {
+      "x": 8,
+      "y": 30,
+      "width": 4,
+      "height": 4,
+      "vizwit": {
+        "title": "Median Assessment Value",
+        "chartType": "callout",
+        "provider": "carto",
+        "domain": "phl.carto.com",
+        "dataset": "opa_properties_public",
+        "valueFormat": "$0,0",
+        "aggregateFunction": "avg",
+        "aggregateField": "market_value"
+      }
+    },
+    {
+      "x": 0,
+      "y": 40,
+      "width": 12,
+      "height": 4,
+      "vizwit": {
+        "title": "Number of Properties by Building Code Description",
+        "description": "Determines the acceptable uses of the property (commercial, residential, etc.)",
+        "provider": "carto",
+        "domain": "phl.carto.com",
+        "dataset": "opa_properties_public",
+        "chartType": "bar",
+        "groupBy": "building_code_description"
+      }
+    }
+  ]
+}

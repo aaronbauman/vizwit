@@ -4,13 +4,34 @@ var Promise = require('bluebird')
 var BaseProvider = require('./baseprovider')
 var squel = require('squel')
 var CartoFields = require('./carto-fields')
+var Backbone = require('backbone')
+
+var model = Backbone.Model.extend({
+  idAttribute: 'label',
+})
+
+// Wrap an optional error callback with a fallback error event.
+var wrapError = function(model, options) {
+  var error = options.error;
+  options.error = function(resp) {
+    if (error) error.call(options.context, model, resp, options);
+    model.trigger('error', model, resp, options);
+  };
+};
 
 module.exports = BaseProvider.extend({
+  model: model,
   initialize: function (models, options) {
     BaseProvider.prototype.initialize.apply(this, arguments)
   },
   fieldsCollection: CartoFields,
-  url: function () {
+  fetch: function(options) {
+    options = _.extend({parse: true}, options);
+    options.data = {q: this.getPostData()}
+    options.method = 'POST'
+    return Backbone.Collection.prototype.fetch.call(this, options);
+  },
+  getPostData: function () {
     var filters = this.config.baseFilters.concat(this.getFilters())
     var query = squel.select()
     query.from(this.config.dataset)
@@ -20,7 +41,7 @@ module.exports = BaseProvider.extend({
       // If valueField specified, use it as the value
       if (this.config.valueField) {
         query.field(this.config.valueField + ' as value')
-      // Otherwise use the aggregateFunction / aggregateField as the value
+        // Otherwise use the aggregateFunction / aggregateField as the value
       } else {
         // If group by was specified but no aggregate function, use count by default
         if (!this.config.aggregateFunction) this.config.aggregateFunction = 'count'
@@ -69,32 +90,17 @@ module.exports = BaseProvider.extend({
     // Limit
     if (this.config.limit) query.limit(this.config.limit)
 
-    var output = 'https://' + this.config.domain +
-           '/api/v2/sql?q=' + query.toString()
-
-    return output
+    return query.toString()
   },
-
+  url: function () {
+    return 'https://' + this.config.domain + '/api/v2/sql'
+  },
   exportUrl: function () {
-    // Save current value
-    var oldLimit = this.config.limit
-
-    // Change value in order to get the URL
-    this.config.limit = null // defaults to 5000
-
-    // Get the URL
-    var url = this.url() + '&format=csv'
-
-    // Set the value back
-    this.config.limit = oldLimit
-
-    return url
+    return 'https://' + this.config.domain + '/dataset/' + this.config.dataset
   },
-
   parse: function (response) {
     return response.rows
   },
-
   getRecordCount: function () {
     var self = this
     // If recordCount has already been fetched, return it as a promise
@@ -110,15 +116,22 @@ module.exports = BaseProvider.extend({
       this.config.groupBy = null
 
       // Get the URL
-      var url = this.url()
-
+      var data = {q: this.getPostData()}
+console.log('data', data)
       // Set the values back
       this.config.aggregateFunction = oldAggregateFunction
       this.config.groupBy = oldGroupBy
 
+      var reqUrl = this.url()
+
       // technically returns a $.Deferred but bluebird throws a warning when
       // returning a promise from within DataTables .ajax
-      return $.getJSON(url).then(function (response) {
+      return $.ajax({
+        dataType: "json",
+        url: reqUrl,
+        data: data,
+        method: "POST"
+      }).then(function (response) {
         self.recordCount = response.rows.length ? response.rows[0].value : 0
         return self.recordCount
       })

@@ -4,15 +4,22 @@ var Promise = require('bluebird')
 var BaseProvider = require('./baseprovider')
 var soda = require('soda-js')
 var SocrataFields = require('./socrata-fields')
+var Backbone = require('backbone')
 
 var MAX_ROWS_TO_EXPORT = 100000000 // Export up to 100M records (a null or empty limit only returns 1K records)
 
 module.exports = BaseProvider.extend({
+  model: Backbone.Model.extend({
+    idAttribute: 'label'
+  }),
   initialize: function (models, options) {
     BaseProvider.prototype.initialize.apply(this, arguments)
     this.consumer = new soda.Consumer(this.config.domain)
   },
   fieldsCollection: SocrataFields,
+  parse: function(resp, options) {
+    return resp;
+  },
   url: function () {
     var filters = this.config.baseFilters.concat(this.getFilters())
     var query = this.consumer.query()

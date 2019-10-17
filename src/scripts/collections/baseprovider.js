@@ -5,10 +5,6 @@ var Backbone = require('backbone')
 var _ = require('underscore')
 var BaseFields = require('./basefields')
 
-var model = Backbone.Model.extend({
-  idAttribute: 'label'
-})
-
 var enclose = function (val) {
   if (typeof val === 'string' && val != 'true' && val != 'false') { // eslint-disable-line
     return "'" + val + "'"
@@ -20,7 +16,6 @@ var enclose = function (val) {
 }
 
 module.exports = Backbone.Collection.extend({
-  model: model,
   initialize: function (models, options) {
     options = options || {}
     this.config = options.config || {}
@@ -70,6 +65,8 @@ module.exports = Backbone.Collection.extend({
         expression.type,
         '(' + expression.value.map(enclose).join(', ') + ')'
       ].join(' ')
+    } else if (expression.type == 'complex') {
+      return expression.value
     } else {
       return [
         field,
